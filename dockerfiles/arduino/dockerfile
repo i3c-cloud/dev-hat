@@ -1,0 +1,38 @@
+# based on https://github.com/denlabo/dockerfile-arduino-ide-ble-nano/blob/master/Dockerfile
+#FROM arm64v8/debian:buster
+FROM arm32v7/debian:buster
+#build-essential g++ openjdk-11-jre 
+# Install dependencies
+RUN apt-get update -q -y && apt-get install -y \
+	openjdk-11-jre unzip wget xz-utils libx11-6 libxext-dev libxrender-dev libxtst-dev \
+	python python-setuptools sudo python-pip python-dev build-essential && \
+	rm -rf /var/lib/apt/lists/*
+
+# Make a user
+ENV HOME /home/arduino
+ENV USER arduino
+RUN useradd --create-home --home-dir $HOME $USER
+RUN adduser arduino root
+WORKDIR $HOME
+
+# Change the current user
+RUN chown -R $USER:$USER $HOME
+USER $USER
+
+# Install Arduino IDE
+RUN wget https://downloads.arduino.cc/arduino-1.8.10-linuxarm.tar.xz && \
+	tar Jxf arduino-1.8.10-linuxarm.tar.xz -C ~/ && rm arduino-1.8.10-linuxarm.tar.xz && \
+	chmod u+x ~/arduino-1.8.10/arduino && \
+	mkdir ~/.bin/ && ln -s ~/arduino-1.8.10/arduino ~/.bin/arduino && \
+	mkdir ~/Arduino/
+
+USER root
+RUN usermod -aG sudo arduino
+RUN usermod -aG dialout arduino
+RUN pip install pyserial
+#RUN cd /home/arduino/arduino-1.8.10 && ./install.sh
+RUN echo "arduino:arduino" | chpasswd
+USER $USER
+
+# Launch the IDE
+CMD ["/home/arduino/.bin/arduino"]
