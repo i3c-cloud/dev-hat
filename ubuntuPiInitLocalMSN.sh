@@ -44,7 +44,7 @@ fi # /opt/initLocalMSN.xrdp.installed
 
 if [ ! -e /opt/initLocalMSN.i3c.installed ]; then
 	
-cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
+echo 'cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
 /etc/polkit-1/localauthority.conf.d/03-allow-network-manager
 
     polkit.addRule(function(action, subject) {
@@ -54,7 +54,7 @@ cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
        return polkit.Result.YES;    } 
 
     });
-EOF
+EOF' | sudo bash
 	
 	
 #=============== after reboot:
@@ -74,16 +74,18 @@ wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$do
 #TODO (purge packages if needed)
 
 sudo dpkg -i $containerdFN
+sudo dpkg -i $dockerCliFN
+sudo dpkg -i $dockerFN
+sudo apt-get -y install docker-compose
+
 sudo systemctl unmask containerd.service
 sudo systemctl enable containerd.service
 sudo systemctl start containerd.service
 
 #check containerd service status
-systemctl status containerd.service
+#systemctl status containerd.service
 
-sudo dpkg -i $dockerCliFN
 
-sudo dpkg -i $dockerFN
 
 #TODO dopracowania tworzenie użytkiwniak
 #sudo adduser $userName docker
@@ -92,9 +94,9 @@ sudo usermod -a -G docker $userName
 sudo systemctl unmask docker
 sudo systemctl enable docker
 sudo systemctl start docker
-systemctl status docker
+#systemctl status docker
 
-sudo apt-get -y install docker-compose
+
 sudo chown $userName /home/$userName/.docker
 
 stage="=== [$scriptName] === Installing i3c ..."
