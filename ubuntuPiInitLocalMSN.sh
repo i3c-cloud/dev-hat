@@ -115,6 +115,11 @@ printf $stage
 sudo mkdir -p /i3c
 sudo chmod -R g+w /i3c
 curl -sSL https://raw.githubusercontent.com/virtimus/i3c/master/bootstrap.sh | sudo bash
+sudo mkdir -p /i3c/dev-hat
+cd /i3c/dev-hat
+/i winit https://github.com/i3c-cloud/dev-hat
+/i wadd msn
+/i wadd hass
 
 sudo touch /opt/initLocalMSN.i3c.installed
 
