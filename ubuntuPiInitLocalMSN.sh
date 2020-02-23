@@ -37,12 +37,7 @@ printf $stage
 sudo update-rc.d xrdp enable
 xhost +
 #todo: desktop image
-sudo touch /opt/initLocalMSN.xrdp.installed
-sudo reboot
-fi # /opt/initLocalMSN.xrdp.installed
-
-if [ ! -e /opt/initLocalMSN.i3c.installed ]; then
-	
+#hide network policy monit
 echo 'cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
 /etc/polkit-1/localauthority.conf.d/03-allow-network-manager
 
@@ -54,6 +49,17 @@ echo 'cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << 
 
     });
 EOF' | sudo bash
+
+sudo chmod a+x /usr/local/bin/ubuntuPiInitLocalMSN.sh
+echo '/bin/bash /usr/local/bin/ubuntuPiInitLocalMSN.sh' >> /etc/rc.local
+
+sudo touch /opt/initLocalMSN.xrdp.installed
+sudo reboot
+fi # /opt/initLocalMSN.xrdp.installed
+
+if [ ! -e /opt/initLocalMSN.i3c.installed ]; then
+	
+
 	
 	
 #=============== after reboot:
@@ -73,15 +79,17 @@ if [ ! -e $dockerFN ]; then
 	wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerFN
 fi
 
-
+if [ -e /opt/myfile ]; then
 #dpkg -l | grep docker
 #dpkg -l | grep container
 #TODO (purge packages if needed)
 
+sudo apt-get -y install docker-compose
+
 sudo dpkg -i $containerdFN
 sudo dpkg -i $dockerCliFN
 sudo dpkg -i $dockerFN
-sudo apt-get -y install docker-compose
+
 
 sudo systemctl unmask containerd.service
 sudo systemctl enable containerd.service
@@ -110,10 +118,9 @@ sudo mkdir -p /i3c
 sudo chmod -R g+w /i3c
 curl -sSL https://raw.githubusercontent.com/virtimus/i3c/master/bootstrap.sh | sudo bash
 
-sudo chmod a+x /usr/local/bin/ubuntuPiInitLocalMSN.sh
-echo '/bin/bash /usr/local/bin/ubuntuPiInitLocalMSN.sh' >> /etc/rc.local
-
 sudo touch /opt/initLocalMSN.i3c.installed
+fi
+
 fi
 
 
