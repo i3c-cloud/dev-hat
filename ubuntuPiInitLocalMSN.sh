@@ -3,9 +3,8 @@ userName=ubuntu
 if [ ! -e /opt/initLocalMSN.xrdp.installed ]; then
 stage="=== [$scriptName] === Update'ing / Upgrade'ing local system platform ..."
 printf $stage
-sudo apt-get update
-sudo apt-get update
-sudo apt-get full-upgrade
+sudo apt-get -y update
+sudo apt-get -y full-upgrade
 
 stage="=== [$scriptName] === Installing xdrp ..."
 printf $stage 
