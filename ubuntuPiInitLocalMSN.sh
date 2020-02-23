@@ -59,9 +59,6 @@ fi # /opt/initLocalMSN.xrdp.installed
 
 if [ ! -e /opt/initLocalMSN.i3c.installed ]; then
 	
-
-	
-	
 #=============== after reboot:
 stage="=== [$scriptName] === Installing docker ..."
 printf $stage
@@ -79,10 +76,13 @@ if [ ! -e $dockerFN ]; then
 	wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerFN
 fi
 
-if [ -e /opt/myfile ]; then
 #dpkg -l | grep docker
 #dpkg -l | grep container
 #TODO (purge packages if needed)
+
+sudo dpkg -i $containerdFN
+sudo dpkg -i $dockerCliFN
+sudo dpkg -i $dockerFN
 
 sudo apt-get -y install docker-compose
 
@@ -98,8 +98,6 @@ sudo systemctl start containerd.service
 #check containerd service status
 #systemctl status containerd.service
 
-
-
 #TODO dopracowania tworzenie użytkiwniak
 #sudo adduser $userName docker
 sudo usermod -a -G docker $userName
@@ -108,7 +106,6 @@ sudo systemctl unmask docker
 sudo systemctl enable docker
 sudo systemctl start docker
 #systemctl status docker
-
 
 sudo chown $userName /home/$userName/.docker
 
@@ -119,7 +116,6 @@ sudo chmod -R g+w /i3c
 curl -sSL https://raw.githubusercontent.com/virtimus/i3c/master/bootstrap.sh | sudo bash
 
 sudo touch /opt/initLocalMSN.i3c.installed
-fi
 
 fi
 
