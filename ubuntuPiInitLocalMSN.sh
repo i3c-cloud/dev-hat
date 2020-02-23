@@ -107,6 +107,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 #systemctl status docker
 
+sudo mkdir -p /home/$userName/.docker
 sudo chown $userName /home/$userName/.docker
 
 stage="=== [$scriptName] === Installing i3c ..."
