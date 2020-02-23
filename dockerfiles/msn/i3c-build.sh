@@ -10,7 +10,6 @@ if [ ! -e /etc/dnsmasq.conf.orig ]; then
 	cp $i3cScriptDir/wifistart /usr/local/bin/wifistart
 	cp $i3cScriptDir/../../wifistart /usr/local/bin/wifistart
 	chmod a+x /usr/local/bin/wifistart \
-	&& echo 'DAEMON_CONF="/etc/hostapd/hostapd.conf"' >> /etc/default/hostapd \
-	&& echo '/i dup msn' >> /etc/rc.local
+	&& echo 'DAEMON_CONF="/etc/hostapd/hostapd.conf"' >> /etc/default/hostapd 
 fi
 

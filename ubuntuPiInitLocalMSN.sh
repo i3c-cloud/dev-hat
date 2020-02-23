@@ -64,9 +64,15 @@ cd /tmp
 containerdFN=containerd.io_1.2.6-3_arm64.deb
 dockerFN=docker-ce_19.03.6~3-0~debian-buster_arm64.deb
 dockerCliFN=docker-ce-cli_19.03.6~3-0~debian-buster_arm64.deb
-wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$containerdFN
-wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerCliFN
-wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerFN
+if [ ! -e $containerdFN ]; then
+	wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$containerdFN
+fi
+if [ ! -e $dockerCliFN ]; then
+	wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerCliFN
+fi
+if [ ! -e $dockerFN ]; then
+	wget https://download.docker.com/linux/debian/dists/buster/pool/stable/arm64/$dockerFN
+fi
 
 
 #dpkg -l | grep docker
@@ -104,6 +110,9 @@ printf $stage
 sudo mkdir -p /i3c
 sudo chmod -R g+w /i3c
 curl -sSL https://raw.githubusercontent.com/virtimus/i3c/master/bootstrap.sh | sudo bash
+
+sudo chmod a+x /usr/local/bin/ubuntuPiInitLocalMSN.sh
+echo '/bin/bash /usr/local/bin/ubuntuPiInitLocalMSN.sh' >> /etc/rc.local
 
 sudo touch /opt/initLocalMSN.i3c.installed
 fi
