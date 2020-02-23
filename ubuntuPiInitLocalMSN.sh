@@ -22,27 +22,41 @@ printf $stage
 sudo update-alternatives --config x-session-manager
 sudo apt -y install lightdm
 echo env -u SESSION_MANAGER -u DBUS_SESSION_BUS_ADDRESS cinnamon-session>~/.xsession
-sudo -i
-echo "export CINNAMON_2D=true" >> /etc/profile
-exit
+
+echo 'echo "export CINNAMON_2D=true" >> /etc/profile' | sudo bash
 
 gsettings get org.gnome.desktop.background picture-uri
 gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/linuxmint/default_background.jpg'
-mkdir -p /usr/share/backgrounds/linuxmint/
+sudo mkdir -p /usr/share/backgrounds/linuxmint/
 #todo wget
+sudo wget https://oswallpapers.com/wp-content/uploads/2018/09/bookwood_linuxmint.jpg -O /usr/share/backgrounds/linuxmint/default_background.jpg
 
 
 
 stage="=== [$scriptName] === Configure cinnamon-session 2 and reboot ..."
 printf $stage
-update-rc.d xrdp enable
+sudo update-rc.d xrdp enable
 xhost +
 #todo: desktop image
-touch /opt/initLocalMSN.xrdp.installed
+sudo touch /opt/initLocalMSN.xrdp.installed
 sudo reboot
 fi # /opt/initLocalMSN.xrdp.installed
 
 if [ -e /opt/initLocalMSN.i3c.installed ]; then
+	
+cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
+/etc/polkit-1/localauthority.conf.d/03-allow-network-manager
+
+    polkit.addRule(function(action, subject) {
+    if (action.id =="org.freedesktop.NetworkManager.settings.modify.system" &&
+
+       subject.isInGroup ("users")) {
+       return polkit.Result.YES;    } 
+
+    });
+EOF
+	
+	
 #=============== after reboot:
 stage="=== [$scriptName] === Installing docker ..."
 printf $stage
@@ -73,7 +87,7 @@ sudo dpkg -i $dockerFN
 
 #TODO dopracowania tworzenie użytkiwniak
 #sudo adduser $userName docker
-sudo usermod -a -G docker ubuntu
+sudo usermod -a -G docker $userName
 
 sudo systemctl unmask docker
 sudo systemctl enable docker
@@ -89,7 +103,7 @@ sudo mkdir -p /i3c
 sudo chmod -R g+w /i3c
 curl -sSL https://raw.githubusercontent.com/virtimus/i3c/master/bootstrap.sh | sudo bash
 
-touch /opt/initLocalMSN.i3c.installed
+sudo touch /opt/initLocalMSN.i3c.installed
 fi
 
 

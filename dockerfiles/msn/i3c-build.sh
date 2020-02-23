@@ -2,7 +2,7 @@
 #currently only ubuntu:bionic
 #cp $i3cScriptDir/dhcpcd.conf /etc/dhcpcd.conf
 if [ ! -e /etc/dnsmasq.conf.orig ]; then
-	sudo apt-get update && sudo apt-get -y install systemd dnsmasq hostapd dhcpcd5 && mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+	sudo apt-get update && sudo apt-get -y install dnsmasq hostapd dhcpcd5 && mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 	
 	cp $i3cScriptDir/dhcpcd.conf /etc/dhcpcd.conf
 	cp $i3cScriptDir/dnsmasq.conf /etc/dnsmasq.conf
