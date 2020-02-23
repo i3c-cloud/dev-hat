@@ -1,0 +1,11 @@
+#based on alpine
+FROM homeassistant/home-assistant
+
+RUN pip install git+https://github.com/home-assistant/home-assistant-cli@dev
+
+
+COPY entrypoint.sh /
+RUN chmod a+x /entrypoint.sh && ln -sf /entrypoint.sh /r
+
+ENTRYPOINT ["/r"]
+CMD ["startup"]

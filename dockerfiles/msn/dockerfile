@@ -1,0 +1,13 @@
+#ARG ARCH
+#FROM arm64v8/ubuntu:bionic
+FROM ubuntu:bionic
+
+
+#stage="=== [$scriptName] === Configuring hatAccessPoint..."
+#printf $stage
+
+COPY entrypoint.sh /
+RUN chmod a+x /entrypoint.sh && ln -sf /entrypoint.sh /r
+
+ENTRYPOINT ["/r"]
+CMD ["startup"]
