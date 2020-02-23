@@ -42,7 +42,7 @@ sudo touch /opt/initLocalMSN.xrdp.installed
 sudo reboot
 fi # /opt/initLocalMSN.xrdp.installed
 
-if [ -e /opt/initLocalMSN.i3c.installed ]; then
+if [ ! -e /opt/initLocalMSN.i3c.installed ]; then
 	
 cat >/etc/polkit-1/localauthority.conf.d/03-allow-network-manager.conf << EOF
 /etc/polkit-1/localauthority.conf.d/03-allow-network-manager
